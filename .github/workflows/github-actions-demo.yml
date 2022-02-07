@@ -27,7 +27,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "Build: <${{github.event.pull_request.html_url}}|${{github.event.number}}>(github.event.pull_request.head.sha) by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
+                    "text": "Build: <${{github.event.pull_request.html_url}}|${{github.event.number}}>(<${{github.event.head_commit.url}}|${{github.event.head_commit.sha}}>) by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
                   }
                 }
               ]
