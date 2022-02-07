@@ -22,7 +22,7 @@ jobs:
 
           ELAPSE=$(( $END_TIME - $START_TIME ))
           TIME_TEXT="$(($ELAPSE/60))m $(($ELAPSE%60))s"
-          echo "::set-output name=pr-tests::${{TIME_TEXT}}"
+          echo "::set-output name=pr-tests::$((TIME_TEXT))"
           # - name: Pass PR Tests to "run" job
           #   id: out-step
           #   run: 
