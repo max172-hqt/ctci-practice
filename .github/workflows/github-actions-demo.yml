@@ -12,6 +12,22 @@ jobs:
           node-version: '14'
       - run: npm install -g bats
       - run: bats -v
+      - name: Calculate time
+        run: |
+          started_at=$(job.started_at)
+          completed_at=$(job.completed_at)
+
+          START_TIME=$(date -d "$started_at" +%s)
+          END_TIME=$(date -d "$completed_at" +%s)
+
+          ELAPSE=$(( $END_TIME - $START_TIME ))
+          TIME_TEXT="$(($ELAPSE/60))m $(($ELAPSE%60))s"
+          echo "::set-output name=pr-tests::${{TIME_TEXT}}"
+          # - name: Pass PR Tests to "run" job
+          #   id: out-step
+          #   run: 
+          echo "$((TIME_TEXT))"
+
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
@@ -27,7 +43,7 @@ jobs:
                   "type": "section",
                   "text": {
                     "type": "mrkdwn",
-                    "text": "PR <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}} ${{ job.status == 'success' ? 'passed' : 'failed' }}"
+                    "text": "PR <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
                   }
                 }
               ]
