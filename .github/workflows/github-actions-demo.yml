@@ -7,26 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
-      # - name: Calculate time
-      #   run: |
-      #     started_at=$(github.event.workflow_run)
-      #     completed_at=$(job.completed_at)
-
-      #     START_TIME=$(date -d "$started_at" +%s)
-      #     END_TIME=$(date -d "$completed_at" +%s)
-
-      #     ELAPSE=$(( $END_TIME - $START_TIME ))
-      #     TIME_TEXT="$(($ELAPSE/60))m $(($ELAPSE%60))s"
-      #     echo "::set-output name=pr-tests::$((TIME_TEXT))"
-      #     # - name: Pass PR Tests to "run" job
-      #     #   id: out-step
-      #     #   run: 
-      #     echo "$((TIME_TEXT))"
 
       - name: Post to a Slack channel
         id: slack
@@ -38,14 +18,12 @@ jobs:
           # For posting a simple plain text message
           payload: |
             {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "PR <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}} ${{github.event.workflow_run.created_at}}"
+              "attachments": [
+                  {
+                      "mrkdwn_in": ["text"],
+                      "color": "#36a64f",
+                      "text": "PR <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
                   }
-                }
               ]
             }
         env:
