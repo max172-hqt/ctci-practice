@@ -1,12 +1,11 @@
-name: learn-github-actions
-on: [push]
-jobs:
-  check-bat-versions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+- name: Post to a Slack channel
+  id: slack
+  uses: slackapi/slack-github-action@v1.18.0
+  with:
+    # Slack channel id, channel name, or user id to post message.
+    # See also: https://api.slack.com/methods/chat.postMessage#channels
+    channel-id: 'T03DP5X71'
+    # For posting a simple plain text message
+    slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+  env:
+    SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
