@@ -1,35 +1,41 @@
 name: learn-github-actions
-on: [push]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
 jobs:
   check-bat-versions:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-      - run: npm install -g bats
-      - run: bats -v
+
+      - name: Set success message color for Slack message
+        if: ${{ job.status == 'success' }}
+        run: |
+          echo "COLOR=#36a64f" >> $GITHUB_ENV
+          echo "MESSAGE=passed" >> $GITHUB_ENV
+
+      - name: Set failure message color for Slack message
+        if: ${{ job.status == 'failure' }}
+        run: |
+          echo "COLOR=#a30301" >> $GITHUB_ENV
+          echo "MESSAGE=failed" >> $GITHUB_ENV
+
       - name: Post to a Slack channel
         id: slack
         uses: slackapi/slack-github-action@v1.18.0
         with:
-          # Slack channel id, channel name, or user id to post message.
-          # See also: https://api.slack.com/methods/chat.postMessage#channels
           channel-id: 'CD5CBQ2Q6'
-          # For posting a simple plain text message
           payload: |
             {
-              "blocks": [
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "Build: <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.pull_request.repo.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
+              "attachments": [
+                  {
+                      "mrkdwn_in": ["text"],
+                      "color": "${{env.COLOR}}",
+                      "text": "Post Merge result: PR <${{github.event.pull_request.html_url}}|#${{github.event.number}}> of ${{github.event.repository.full_name}} by ${{github.event.pull_request.user.login}} from `${{github.event.pull_request.head.ref}}` to `${{github.event.pull_request.base.ref}}` ${{env.MESSAGE}}"
                   }
-                }
               ]
             }
+
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
