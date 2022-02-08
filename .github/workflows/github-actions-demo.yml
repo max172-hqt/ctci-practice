@@ -26,7 +26,7 @@ jobs:
               "attachments": [
                   {
                       "mrkdwn_in": ["text"],
-                      "color": "$COLOR",
+                      "color": "${{COLOR}}",
                       "text": "Post Merge result: <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
                   }
               ]
