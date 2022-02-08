@@ -10,11 +10,15 @@ jobs:
 
       - name: Set success message color for Slack message
         if: ${{ job.status == 'success' }}
-        run: echo "COLOR=#36a64f" >> $GITHUB_ENV
+        run: |
+          echo "COLOR=#36a64f" >> $GITHUB_ENV
+          echo "MESSAGE=passed" >> $GITHUB_ENV
 
       - name: Set failure message color for Slack message
         if: ${{ job.status == 'failure' }}
-        run: echo "COLOR=#a30301" >> $GITHUB_ENV
+        run: |
+          echo "COLOR=#a30301" >> $GITHUB_ENV
+          echo "MESSAGE=failed" >> $GITHUB_ENV
 
       - name: Post to a Slack channel
         id: slack
@@ -27,7 +31,7 @@ jobs:
                   {
                       "mrkdwn_in": ["text"],
                       "color": "${{env.COLOR}}",
-                      "text": "Post Merge result: PR <${{github.event.pull_request.html_url}}|#${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
+                      "text": "Post Merge result: PR <${{github.event.pull_request.html_url}}|#${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}} ${{env.MESSAGE}}"
                   }
               ]
             }
