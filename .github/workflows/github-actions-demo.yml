@@ -8,26 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Post successful message to Slack channel
-        if: job.status == 'success'
-        id: slack
-        uses: slackapi/slack-github-action@v1.18.0
-        with:
-          # Slack channel id, channel name, or user id to post message.
-          # See also: https://api.slack.com/methods/chat.postMessage#channels
-          channel-id: 'CD5CBQ2Q6'
-          # For posting a simple plain text message
-          payload: |
-            {
-              "attachments": [
-                  {
-                      "mrkdwn_in": ["text"],
-                      "color": "#36a64f",
-                      "text": "Post Merge Result: <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
-                  }
-              ]
-            }
-
       - name: Set success message color for Slack message
         if: ${{ job.status == 'success' }}
         run: echo "COLOR=#36a64f"
