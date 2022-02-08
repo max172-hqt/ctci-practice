@@ -27,7 +27,10 @@ jobs:
                   {
                       "mrkdwn_in": ["text"],
                       "color": "${{env.COLOR}}",
-                      "text": "Post Merge result: PR <${{github.event.pull_request.html_url}}|${{github.event.number}}> by ${{github.event.pull_request.user.login}} of ${{github.event.repository.full_name}} from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
+                      "text": "Post Merge result: PR <${{github.event.pull_request.html_url}}|${{#github.event.number}}> 
+                        by ${{github.event.pull_request.user.login}} 
+                        of ${{github.event.repository.full_name}} 
+                        from ${{github.event.pull_request.head.ref}} to ${{github.event.pull_request.base.ref}}"
                   }
               ]
             }
